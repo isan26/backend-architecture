@@ -17,6 +17,7 @@ The codebase will be split into multiple layers, each of these layers will solve
 
 ## Layers and their responsibilities
 
+![Layers](layers.svg)
 ### Main entry point:
 This will be a single file (typically will be `app.js` or `index.js`) at the root of the codebase.
 The main task is to instantiate and call any needed resources. Is in this file where connections to DBs are called (not defined just called) and the router is wired up.
@@ -48,7 +49,6 @@ The model will contain all the knowledge about the data itself and how to access
 
 ### Pipes (or Plugins)
 Will be 3rd party integrations with other systems, these integrations should be made in a way that the failure on other systems does not propagate and break our system, this is possible only when we only need to send data or do certain actions on other systems and our system itself do not depend on it.
-For cases where other systems' data and behavior are needed for our system to work (like handling payments with Stripe), a layer similar to a model must be made to attend to this.
 
 
 ### Other non-layer parts
@@ -66,26 +66,87 @@ We will use one file per DB.
 
 
 
-Pending
-- Make the diagram with the layers
-- Describe how everything is wired together
-- Write Express and Hapi examples
-- Describe different scenarios
-- Dig more into the patterns mentioned in the Article
-
-
-Folder structure
+## Example Folder structure
 ```
-auth/
-config/
-controllers
-db
-docs
-middleware
-models
-routes
-utils (helpers)
-logic
-app.js
-
+├── app.js
+├── auth
+│   ├── admin.js
+│   ├── client.js
+│   └── index.js
+├── config
+│   ├── app.js
+│   ├── db.js
+│   ├── env.js
+│   └── key.js
+├── controllers
+│   ├── admin.js
+│   ├── client.js
+│   └── nomenclator.js
+├── db
+│   └── main.js
+├── docs
+│   ├── Admin.md
+│   ├── Nomenclator.md
+│   └── Client.md
+├── logic
+│   ├── admin
+│   │   ├── charge.js
+│   │   ├── create.js
+│   │   ├── list
+│   │   │   ├── guest-handler.js
+│   │   │   └── index.js
+│   │   ├── nomenclators.js
+│   │   ├── payment.js
+│   │   ├── schedule.js
+│   │   └── update.js
+│   └── client
+│       ├── cancel.js
+│       └── checkin.js
+├── middleware
+│   ├── errorHandler.js
+│   └── headers.js
+├── models
+│   ├── charge.js
+│   ├── client.js
+│   ├── dispute.js
+│   ├── nomenclator.js
+│   ├── notification.js
+│   ├── querys
+│   │   ├── disputeList.js
+│   │   ├── findOneByCode.js
+│   │   ├── listReservations.js
+│   │   ├── nomenclatorsNames.js
+│   │   └── paymentReservations.js
+│   ├── reservation_has_nomenclator.js
+│   └── reservation.js
+├── pipes
+│   └── stripe
+│       ├── config.js
+│       └── index.js
+├── routes
+│   ├── admin.js
+│   ├── client.js
+│   ├── nomenclator.js
+│   ├── index.js
+│   └── rules
+│       ├── admin
+│       │   ├── charge.js
+│       │   ├── create.js
+│       │   ├── date.js
+│       │   ├── loadReservation.js
+│       │   ├── payment.js
+│       │   ├── regex.js
+│       │   └── schedule.js
+│       ├── client.js
+│       ├── errorHandler.js
+│       └── nomenclator
+│           ├── create.js
+│           ├── delete.js
+│           ├── update.js
+│           └── view.js
+└── utils
+    ├── date.js
+    ├── httpErrors.js
+    ├── mailtransporter.js
+    └── uuid.js
 ```
